@@ -40,6 +40,16 @@
 #include <opencv2/core/core.hpp>
 #include <stdexcept>
 
+#ifdef WIN32
+#ifdef CV_BRIDGE_INTERNAL
+#define  EXPORT __declspec(dllexport)
+#else
+#define  EXPORT __declspec(dllimport)
+#endif
+#else
+#define  CLIENTLIBTEXPORT
+#endif
+
 namespace cv_bridge {
 
 class Exception : public std::runtime_error
@@ -101,7 +111,7 @@ protected:
 
   /// @cond DOXYGEN_IGNORE
   friend
-  CvImageConstPtr toCvShare(const sensor_msgs::Image& source,
+  EXPORT CvImageConstPtr toCvShare(const sensor_msgs::Image& source,
                             const boost::shared_ptr<void const>& tracked_object,
                             const std::string& encoding);
   /// @endcond
@@ -123,7 +133,7 @@ protected:
  * If \a encoding is the empty string (the default), the returned CvImage has the same encoding
  * as \a source.
  */
-CvImagePtr toCvCopy(const sensor_msgs::ImageConstPtr& source,
+EXPORT CvImagePtr toCvCopy(const sensor_msgs::ImageConstPtr& source,
                     const std::string& encoding = std::string());
 
 /**
@@ -145,7 +155,7 @@ CvImagePtr toCvCopy(const sensor_msgs::ImageConstPtr& source,
  * 255/65535 respectively). Otherwise, no scaling is applied and the rules from the convertTo OpenCV
  * function are applied (capping): http://docs.opencv.org/modules/core/doc/basic_structures.html#mat-convertto
  */
-CvImagePtr toCvCopy(const sensor_msgs::Image& source,
+EXPORT CvImagePtr toCvCopy(const sensor_msgs::Image& source,
                     const std::string& encoding = std::string());
 
 /**
@@ -168,7 +178,7 @@ CvImagePtr toCvCopy(const sensor_msgs::Image& source,
  * If \a encoding is the empty string (the default), the returned CvImage has the same encoding
  * as \a source.
  */
-CvImageConstPtr toCvShare(const sensor_msgs::ImageConstPtr& source,
+EXPORT CvImageConstPtr toCvShare(const sensor_msgs::ImageConstPtr& source,
                           const std::string& encoding = std::string());
 
 /**
@@ -195,22 +205,22 @@ CvImageConstPtr toCvShare(const sensor_msgs::ImageConstPtr& source,
  * If \a encoding is the empty string (the default), the returned CvImage has the same encoding
  * as \a source.
  */
-CvImageConstPtr toCvShare(const sensor_msgs::Image& source,
+EXPORT CvImageConstPtr toCvShare(const sensor_msgs::Image& source,
                           const boost::shared_ptr<void const>& tracked_object,
                           const std::string& encoding = std::string());
 
 /**
  * \brief Convert a CvImage to another encoding using the same rules as toCvCopy
  */
-CvImagePtr cvtColor(const CvImageConstPtr& source,
-                    const std::string& encoding);
+EXPORT CvImagePtr cvtColor(const CvImageConstPtr& source,
+    const std::string& encoding);
 
 /**
  * \brief Get the OpenCV type enum corresponding to the encoding.
  *
  * For example, "bgr8" -> CV_8UC3.
  */
-int getCvType(const std::string& encoding);
+EXPORT int getCvType(const std::string& encoding);
 
 } // namespace cv_bridge
 
